@@ -14,12 +14,6 @@ AWSXRay.middleware.setSamplingRules({
   },
   'version': 1
 });
-//AWSXRay.enableManualMode();
-//AWSXRay.enableAutomaticMode();
-
-//const AWS = require('aws-sdk');
-//AWS.config.region = 'us-west-2';
-//const lda = new AWS.Lambda();
 
 const AWS = AWSXRay.captureAWS(require('aws-sdk'));
 AWS.config.region = 'us-west-2';
@@ -35,6 +29,8 @@ const subreq = (seg) => {
 };
 
 const request = (seg) => {
+  // unlike with express, each request will have its own
+  // trace unless you explicitly set a segment
   AWSXRay.setSegment(new AWSXRay.Segment(seg));
   subreq(seg);
   subreq(seg + "_2");
